@@ -21,14 +21,14 @@ namespace ManejoDePresupuestos.Servicios
                                           commandType: System.Data.CommandType.StoredProcedure);
             tipoCuenta.Id = id;
         }
-        public async Task<bool> Existe(string nombre, int usuarioId)
+        public async Task<bool> Existe(string nombre, int usuarioId, int id = 0)
         {
             using var connection = new SqlConnection(_connectionString);
             var existe = await connection.QueryFirstOrDefaultAsync<int>(
-                                       @"SELECT 1
-                                       FROM TiposCuentas
-                                       WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId;",
-                                       new { nombre, usuarioId });
+                     @"SELECT 1
+                     FROM TiposCuentas
+                     WHERE Nombre = @Nombre AND UsuarioId = @UsuarioId AND Id <> @id;",
+                     new { nombre, usuarioId,id });
             return existe == 1;
         }
         public async Task<IEnumerable<TipoCuenta>> Obtener(int usuarioId)
